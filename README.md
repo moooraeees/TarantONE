@@ -1,3 +1,75 @@
+# TarantONE — POC Chatbot
+
+> Assistente de FAQ/cronogramas para o projeto ONE (POC). Backend em FastAPI, frontend estático em `index.html`.
+
+Principais arquivos
+- `main.py` — FastAPI app que lê `base_faq_one_organizada.csv` e consulta a API Groq.
+- `index.html` — UI do chat (Vanilla JS + CSS).
+- `base_faq_one_organizada.csv` — Dados de cronograma e métricas.
+- `.env` — Contém `GROQ_API_KEY` (não comitar no Git).
+- `Dockerfile` — Conteinerização (adicionado).
+
+Como rodar localmente
+
+1. Crie e ative um virtualenv (Windows PowerShell):
+
+```powershell
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+```
+
+2. Instale dependências:
+
+```powershell
+pip install -r requirements.txt
+```
+
+3. Crie arquivo `.env` (não comitar) com sua chave Groq:
+
+```
+GROQ_API_KEY=seu_token_aqui
+```
+
+4. Rode o servidor:
+
+```powershell
+# modo simples
+python main.py
+
+# ou com reload durante desenvolvimento
+.venv\Scripts\uvicorn.exe main:app --host 0.0.0.0 --port 8000 --reload
+```
+
+5. Abra o frontend em: http://localhost:8000
+
+Notas sobre CSV e encoding
+- Se você ver caracteres corrompidos (�), abra o CSV e salve como UTF-8 (ou use `latin1`) antes de iniciar.
+
+Deploy rápido (opções)
+
+- Render: crie um Web Service, conecte ao GitHub, defina `Start Command`:
+
+```
+uvicorn main:app --host 0.0.0.0 --port $PORT
+```
+
+Adicione `GROQ_API_KEY` nas Environment Variables do serviço.
+
+- Railway: conecte repo e defina `Start Command` igual ao acima; adicione `GROQ_API_KEY` no dashboard.
+
+- Docker (Cloud Run / Fly): use o `Dockerfile` abaixo e deploy conforme provedor.
+
+Segurança
+- Nunca comite chaves em `.env`. Se acidentalmente comitar, revogue a chave e gere uma nova.
+- Para deploy em produção, guarde `GROQ_API_KEY` nas variáveis de ambiente do provedor.
+
+Próximos passos sugeridos
+- Implementar RAG (indexar CSV e buscar trechos relevantes em vez de enviar todo o CSV).
+- Adicionar testes e logging centralizado.
+- Automatizar deploy com GitHub Actions e GitHub Secrets.
+
+---
+© POC TarantONE
 # ChatBot ONE - Assistente de Suporte
 
 Chatbot web para responder perguntas sobre eventos, cronogramas e métricas usando a API Gemini.
